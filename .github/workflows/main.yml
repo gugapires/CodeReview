@@ -1,20 +1,27 @@
-name: SCA
+name: CI
 on:
  push:
-   branches: [ master ]
+   branches: [ main ]
  pull_request:
-   branches: [ master ]  
- workflow_dispatch:
+   branches: [ main ]
+
 jobs:
- conviso-sca:
+ conviso-cr:
    runs-on: ubuntu-latest
    container:
      image: convisoappsec/flowcli
      env:
        FLOW_API_KEY:  ${{secrets.CONVISO_API_KEY}}
-       FLOW_PROJECT_CODE: ${{secrets.PROJECT_KEY_SCA}}
-       FLOW_API_URL: ${{secrets.HOMOLOGA_URL}}
+       FLOW_PROJECT_CODE: "<project code>"
    steps:
-   - uses: actions/checkout@v2
-   - name: Run SCA
-     run: conviso sca run
+    - uses: actions/checkout@v3
+
+    - name: codereview
+      #Please use only one of the following approaches in the same job
+
+      #Using Tags, ordered by time
+      #run: conviso deploy create with tag-tracker sort-by time
+      #Using Tags, ordered by versioning style (semantic version)
+      #run: conviso deploy create with tag-tracker sort-by versioning-style
+      #Without using Tags, ordered by Git tree
+      run: conviso deploy create with values
